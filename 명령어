@@ -1,0 +1,54 @@
+인증서 만들기
+ openssl req -new -newkey rsa:2048 -nodes   -keyout capper.key -out capper.csr   -subj "//CN = 10.1.2.232"
+
+
+nginx 인증서
+
+step ca certificate \
+  nginx-server \
+  mtls_nginx.crt mtls_nginx.key \
+  --provisioner "SF.CA" \
+  --password-file pw.txt \
+  --san 10.1.2.232 \
+  --ca-url https://10.1.2.112:443 \
+  --root root_ca.crt
+
+디바이스 인증서
+step ca certificate \
+  capper \
+  mtls_capper.crt mtls_capper.key \
+  --provisioner "SF.CA" \
+  --password-file pw.txt \
+  --ca-url https://10.1.2.112:443 \
+  --root root_ca.crt
+
+
+step 다운로드
+  # 1. CLI-only 바이너리 다운로드
+curl -LO https://github.com/smallstep/cli/releases/download/v0.23.3/step_linux_0.23.3_amd64.tar.gz
+
+# 2. 압축 해제
+tar -xzf step_linux_0.23.3_amd64.tar.gz
+
+# 3. 바이너리 이동
+sudo mv step_0.23.3/bin/step /usr/local/bin/
+
+# 4. 정상 동작 확인
+step version
+
+echo '3719' > pw.txt
+
+echo 'factory1234' > pw.txt
+
+
+
+
+step-ca 시작 명령어 sudo step-ca ~/.step/config/ca.json --password-file pw.txt
+
+
+CREATE TABLE error_logs_sns (
+    device_name     VARCHAR(50) NOT NULL,
+    line_name       VARCHAR(50) NOT NULL,
+    abnormal_count  INT NOT NULL,
+    triggered_at    DATETIME DEFAULT CURRENT_TIMESTAMP
+);
