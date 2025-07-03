@@ -12,5 +12,10 @@ IoT 센서를 통해 설비 상태를 실시간으로 수집 및 분석하고, �
 | **보안 인증**     | Step-ca, AWS IAM               | mTLS 인증 게이트웨이, 권한 관리      |
 
 
+아키텍처 구성도
+
+![image](https://github.com/user-attachments/assets/a9f775ed-2262-4e43-a01a-52ddfaf6550c)
+
+
 팀장 안현수
 팀원 강승민, 이목원
