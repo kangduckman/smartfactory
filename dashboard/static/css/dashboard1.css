@@ -1,0 +1,450 @@
+    /* ----------------------------------------------------
+       각종 변수 선언
+    ---------------------------------------------------- */
+    :root {
+      /* 간격(Spacing) */
+      --spacing: 20px;           /* 상단, 오른쪽 여백 */
+      --data-gap: 10px;          /* 데이터창들 간 */
+      --status-gap: 10px;        /* 상태창들 간 */
+
+      /* 이미지 사이즈 */
+      --image-width: 1100px;
+      --image-height: 500px;
+
+      /* 데이터창 사이즈 */
+      --data-width: 265px;
+      --data-height: 210px;
+      
+      /* 상태창 사이즈 */
+      --status-width: 270px;
+      --status-height: 113px;
+    }
+
+    /* ----------------------------------------------------
+       바디 설정: 페이지 전체를 감싸기 위해 상대 위치 지정
+    ---------------------------------------------------- */
+    body {
+      margin: 0;
+      padding: 0;
+      position: relative; /* 자식 요소의 절대 위치를 기준으로 잡기 위해 필요 */
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #fafafa;
+    }
+
+    /* ----------------------------------------------------
+       우측 이미지 & 데이터창 래퍼
+    ---------------------------------------------------- */
+    .right-wrapper {
+      position: absolute;
+      top: var(--spacing);
+      right: var(--spacing);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end; /* 오른쪽 정렬 */
+    }
+
+    /* ----------------------------------------------------
+       우측 상단 이미지
+    ---------------------------------------------------- */
+    .top-right-image {
+      width: var(--image-width);
+      height: var(--image-height);
+      object-fit: cover;
+      /* 필요 시 그림자나 테두리 추가 가능 */
+      /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); */
+      /* border: 1px solid #ccc; */
+    }
+
+    /* ----------------------------------------------------
+       이미지 바로 아래 가로로 나열될 데이터창 컨테이너
+    ---------------------------------------------------- */
+    .data-container {
+      display: flex;
+      gap: var(--data-gap);
+      margin-top: var(--spacing); /* 이미지와 간격 */
+    }
+
+    /* ----------------------------------------------------
+       데이터창 공통 스타일
+    ---------------------------------------------------- */
+    .data-window {
+      position: relative;
+      width: var(--data-width);
+      height: var(--data-height);
+      background-color: #ffffff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;       /* 내부 요소를 세로로 정렬 */
+      justify-content: flex-end;    /* 내부 요소를 밑단에 붙임 */
+      align-items: center;
+      padding-bottom: 10px;
+    }
+
+    .d-device-name {
+      font-size: 1.2rem;
+      color: #666;
+    }
+
+    /* ----------------------------------------------------
+       워셔 래퍼: 온도계와 텍스트를 가로로 배치
+    ---------------------------------------------------- */
+    .washer-container {
+      display: flex;
+      align-items: center;  /* 텍스트와 온도계를 수평 중앙 정렬 */
+      gap: 30px;             /* 온도계와 텍스트 사이 간격 */
+      margin-bottom: 10px;   /* 기기 이름과의 간격 */
+    }
+
+    /* ----------------------------------------------------
+       온도 텍스트 (숫자와 단위를 분리)
+    ---------------------------------------------------- */
+    .temp-text {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .temp-value {
+      font-size: 3rem;   /* 숫자 크기 */
+      font-weight: bold;
+    }
+    .temp-unit {
+      font-size: 1rem;    /* ℃ 단위 크기 */
+      color: #333;
+    }
+
+    /* ----------------------------------------------------
+       온도계 스타일
+       - margin-bottom을 0으로 변경: 래퍼에서 간격 조절
+       - 왼쪽으로 살짝 이동시키려면 margin-left 값을 조정
+    ---------------------------------------------------- */
+    .thermometer {
+      --tube-width: 20px;       /* 관의 가로 두께 */
+      --tube-height: 120px;     /* 관의 세로 길이 (불브 제외) */
+      --bulb-size: 35px;        /* 불브(구)의 지름 */
+      --border-color: #ccc;     /* 테두리 색상 */
+      --mercury-color: rgb(0, 0, 0); /* 초기 색상 */
+      --level: 0%;
+
+      position: relative;
+      width: var(--tube-width);
+      height: calc(var(--tube-height) + var(--bulb-size));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 0;
+      margin-left: 20px;
+    }
+
+    /* --------------------------------------------------
+       2) 관(tube)
+    -------------------------------------------------- */
+    .thermometer-tube {
+      position: relative;
+      width: var(--tube-width);
+      height: var(--tube-height);
+      background-color: #fafafa;
+      border: 2px solid var(--border-color);
+      border-radius: calc(var(--tube-width) / 2);
+      overflow: hidden;
+      margin-bottom: -4px; /* 튜브와 불브의 border 두께(각각 2px)만큼 영역이 겹치도록 */
+      box-sizing: border-box;
+    }
+
+    /* --------------------------------------------------
+       3) 수은(Mercury)
+    -------------------------------------------------- */
+    .thermometer-mercury {
+      position: absolute;
+      bottom: 0;
+      left: 50%;                     /* 부모 요소(.thermometer-tube) 기준으로 가로 중앙 */
+      transform: translateX(-50%);   /* 정확히 중앙에 위치시키기 위해 */
+      width: 45%;
+      height: var(--level);
+      background-color: var(--mercury-color);
+      transition: height 0.5s ease, background-color 0.5s ease;
+    }
+
+    /* --------------------------------------------------
+       4) 불브(Bulb)
+    -------------------------------------------------- */
+    .thermometer-bulb {
+      position: absolute;
+      bottom: 0;
+      width: var(--bulb-size);
+      height: var(--bulb-size);
+      background-color: #fafafa;
+      border: 2px solid var(--border-color);
+      border-radius: 50%;
+      z-index: 1;
+      box-sizing: border-box;
+    }
+
+    /* ----------------------------------------
+       디지털 숫자판(Digital Display) 스타일
+    ---------------------------------------- */
+    .charger-display {
+      position: relative;
+      display: flex;
+      justify-content: flex-start;  /* 왼쪽 정렬로 변경 */
+      align-items: center;
+      width: calc(var(--data-width) * 0.7);      
+      height: calc(var(--data-height) * 0.6);
+      background-color: #000;
+      border-radius: 4px;
+      margin-bottom: 20px;          /* 아래의 기기 이름과 간격 */
+      box-sizing: border-box;
+      padding-left: 25px;           /* 왼쪽 여백을 줘서 숫자 이동 */
+    }
+
+    /* 1) 숫자+단위를 함께 감싸는 래퍼 */
+    .charger-container {
+      position: relative;
+      display: inline-block;        /* 숫자와 단위를 함께 중앙 배치 */
+    }
+
+    /* 2) 실제 디지털 숫자 */
+    .vibe-value {
+      font-family: 'LAB디지털', monospace;
+      font-size: 3.5rem;
+      font-weight: bold;
+      color: rgb(180, 180, 180);
+    }
+
+    /* 3) 단위 텍스트(mm/s)를 숫자의 오른쪽 하단에 절대위치로 배치 */
+    .vibe-unit {
+      position: absolute;
+      bottom: 0;                 /* 숫자의 하단(비교 대상 vibe-value의 바닥)과 맞추기 */
+      left: calc(100% + 5px);    /* 숫자 오른쪽으로 5px 떨어지게 설정 */
+      font-family: Arial, sans-serif;
+      font-size: 1rem;
+      color: #fafafa;
+    }
+
+    /* ----------------------------------------
+       Capping 토크바 및 값 표시 스타일
+    ---------------------------------------- */
+    .capping-text {
+      display: flex;
+      align-items: baseline;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 3px;
+    }
+
+    .torque-value {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-right: 2px;
+    }
+
+    .torque-unit {
+      font-size: 1rem;
+      color: #666;
+    }
+
+    .capping-container {
+      position: relative;
+      width: calc(var(--data-width) * 0.6);
+      height: 100px;
+      background-color: rgb(240, 240, 240);
+      border: 1px solid rgb(200, 200, 200);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .capping-bar {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 0;
+      background-color: rgb(240, 240, 240);
+      border-radius: 4px 4px 0 0;
+      transition: height 0.3s ease-out, background-color 0.3s ease-out;
+    }
+
+    /* -------------------------------
+       Labeling용 게이지 스타일 (수정됨)
+    ------------------------------- */
+    .labeling-container {
+      position: relative;
+      width: 200px;
+      height: 100px;
+      margin-bottom: 15px; /* 게이지와 숫자 영역 사이 간격 */
+    }
+
+    .gauge-svg {
+      width: 100%;
+      height: 100%;
+      }
+
+    .gauge-needle {
+      transform-origin: 50% 100%;
+      transition: transform 0.5s ease-out;
+    }
+
+    .gauge-center-circle {
+      fill: #333;
+    }
+
+    .gauge-point {
+      font-size: 1rem;
+      fill: #333;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+
+    /* ----------------------------------------
+       Labeling 값(숫자) + 단위 컨테이너 스타일
+      - value(값)와 unit(단위)을 분리
+      - d-device-name과의 간격 확보를 위해 margin-bottom 추가
+    ---------------------------------------- */
+    .labeling-text {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;               /* 숫자와 단위 사이 간격 */
+      margin-bottom: 15px;    /* 아래 d-device-name과의 간격 */
+    }
+
+    /* 숫자(값) 스타일 */
+    .speed-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    /* 단위(“m/s”) 스타일 */
+    .speed-unit {
+      font-size: 1rem;
+      color: #666;
+      margin-left: 4px;
+    }
+
+    /* ----------------------------------------------------
+       사진 왼쪽에 배치될 상태창 컨테이너
+    ---------------------------------------------------- */
+    .status-container {
+      position: absolute;
+      right: calc(var(--image-width) + var(--spacing));
+      display: flex;
+      flex-direction: column;
+      gap: var(--status-gap);
+    }
+
+    /* ----------------------------------------------------
+       개별 상태창 스타일 (기기명 + ON/OFF 삽입)
+    ---------------------------------------------------- */
+    .status-window {
+      position: relative;
+      width: var(--status-width);
+      height: var(--status-height);
+      background-color: #ffffff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .s-device-name {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.2rem;
+      color: #666;
+    }
+
+    .separator {
+      position: absolute;
+      top: 40px;
+      left: 0px;
+      right: 0px;
+      height: 1px;
+      background-color: #ccc;
+    }
+
+    .status-text {
+      position: absolute;
+      left: 50%;
+      top: 65%;
+      transform: translate(-50%, -50%);
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    /* ON 상태일 때 텍스트 색상 변경 */
+    .status-text.on {
+      color: rgb(90, 190, 230) !important;
+    }
+
+    /* OFF 상태일 때 윈도우 테두리 깜빡임 애니메이션 */
+    @keyframes blink-border {
+      0%, 100% { border-color: rgb(250, 60, 60); }
+      50%      { border-color: transparent; }
+    }
+
+    .data-window.blink-alert {
+      /* 기존 테두리(1px) 대신 두꺼운 붉은 테두리 */
+      border: 2px solid rgb(250, 60, 60);
+      animation: blink-border 1s infinite;
+      /* border-radius 유지 */
+      border-radius: 4px;
+    }
+
+    .status-window.blink-off {
+      border: 2px solid rgb(250, 60, 60);          /* 두꺼운 붉은 테두리 */
+      animation: blink-border 1s infinite;
+      /* border-radius 유지 */
+      border-radius: 4px;
+    }
+
+    /* ----------------------------------------------------
+      에러 로그 경고창 스타일
+    ---------------------------------------------------- */
+    .status-warning-window {
+      position: absolute;
+      right: calc(var(--image-width) + var(--spacing));
+      top: calc(var(--image-height) + var(--spacing));
+      width: var(--status-width);
+      height: var(--data-height);
+      background-color: rgb(250, 250, 250);
+      border: 1px solid rgb(200, 200, 200);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 16px;
+      display: flex;               /* 플렉스 컨테이너로 전환 */
+      flex-direction: column;      /* 세로 방향 정렬 */
+      justify-content: center;     /* 세로 축(주축) 중앙 정렬 */
+      align-items: center;         /* 가로 축(교차축) 중앙 정렬 */
+      z-index: 10;                /* 다른 요소 위에 표시되도록 충분히 높은 z-index 부여 */
+      box-sizing: border-box;
+    }
+
+    /* 디바이스 이름 (빨강) */
+    .status-warning-window .device-names {
+      top: 50px;
+      color: red;
+      font-family: 'Pretendard', monospace;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    /* 안내 문구 (“기기 점검 바람!”) */
+    .status-warning-window .warning-text {
+      color: rgb(40, 40, 40);
+      font-family: 'Pretendard', monospace;
+      font-size: 1.5rem;
+    }
+
+    /* 경고 이모티콘 스타일 */
+    .status-warning-window .warning-icon {
+      /* 이모티콘 크기 확대 */
+      font-size: 2rem;
+      /* 텍스트와 위아래 간격 조정 */
+      margin-top: 4px;
+      margin-bottom: 4px;
+    }

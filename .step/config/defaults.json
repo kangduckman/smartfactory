@@ -1,0 +1,6 @@
+{
+	"ca-url": "https://localhost:8000",
+	"ca-config": "C:\\Users\\rta70\\.step\\config\\ca.json",
+	"fingerprint": "9d5b4f8c8c048b1f1d96b7e071fa4ca966c64cf18a42aa0cdbbb3b80568796ac",
+	"root": "C:\\Users\\rta70\\.step\\certs\\root_ca.crt"
+}

@@ -1,0 +1,53 @@
+CREATE TABLE devices (
+    id VARCHAR(10) PRIMARY KEY,
+    device_name VARCHAR(50) NOT NULL,
+    line_name VARCHAR(50) NOT NULL,
+    UNIQUE(device_name, line_name)
+);
+
+INSERT INTO devices (id, device_name, line_name)
+VALUES
+  (a123, 'washer',   'line_1'),
+  (b123, 'charger',  'line_1'),
+  (c123, 'capper',   'line_1'),
+  (d123, 'labeling', 'line_1');
+
+CREATE TABLE device_logs (
+    device_id INT NOT NULL,
+    value FLOAT NOT NULL,
+    status ENUM('normal', 'abnormal') NOT NULL,
+    log_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (device_id) REFERENCES devices(id)
+);
+
+
+CREATE TABLE error_logs (
+    device_id INT NOT NULL,
+    abnormal_count INT NOT NULL,
+    triggered_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (device_id) REFERENCES devices(id)
+);
+
+
+iot-db.c5a4e0ooeip0.us-east-2.rds.amazonaws.comssh -i "Packtory.pem" ubuntu@3.129.42.216
+S
+
+DROP TABLE IF EXISTS devices;
+DROP TABLE IF EXISTS long_error_logs;
+
+CREATE TABLE error_logs (
+    device_name VARCHAR(50) NOT NULL,
+    line_name VARCHAR(50) NOT NULL,
+    abnormal_count INT NOT NULL,
+    triggered_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+
+step ca certificate "client.device.local" \
+  "devices/capper_device/certs/mTLS_certs/client.crt" \
+  "devices/capper_device/certs/mTLS_certs/client.key" \
+  --x5c-cert "devices/capper_device/certs/provisioner_certs/capper.crt" \
+  --x5c-key "devices/capper_device/certs/provisioner_certs/capper.key" \
+  --provisioner "smartfactory" \
+  --ca-url "https://localhost:8000" \
+  --root "C:\Users\rta70\.step\certs\root_ca.crt"

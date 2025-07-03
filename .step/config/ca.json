@@ -1,0 +1,39 @@
+{
+        "root": "",
+        "federatedRoots": null,
+        "crt": "",
+        "key": "",
+        "address": ":443",
+        "insecureAddress": "",
+        "dnsNames": [
+                "10.1.2.112"
+        ],
+        "logger": {
+                "format": "text"
+        },
+        "db": {
+                "type": "badgerv2",
+                "dataSource": "",
+                "badgerFileLoadingMode": ""
+        },
+        "authority": {
+                "provisioners": [
+                        {
+                                "type": "JWK",
+                                "name": "SF.CA",
+                                "key": {
+                                },
+                                "encryptedKey": ""
+                        }
+                ],git merge --abort
+        },
+        "tls": {
+                "cipherSuites": [
+                        "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256",
+                        "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256"
+                ],
+                "minVersion": 1.2,
+                "maxVersion": 1.3,
+                "renegotiation": false
+        }
+}
