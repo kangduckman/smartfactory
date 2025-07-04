@@ -6,13 +6,7 @@ import time
 app = Flask(__name__)
 
 # ✅ RDS DB 설정
-db_config = {
-    "host": "iot-db.c5a4e0ooeip0.us-east-2.rds.amazonaws.com",
-    "user": "admin",
-    "password": "welcome1",
-    "database": "smart_factory",
-    "charset": "utf8mb4"
-}
+db_config = {}
 
 # ✅ 디바이스 정상 범위
 DEVICE_CONFIG = {
